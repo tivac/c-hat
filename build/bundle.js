@@ -11,6 +11,7 @@ rollup({
     ]
 })
 .then((bundle) => bundle.write({
-    format : "cjs",
-    dest   : "./gen/c-hat.js"
+    format    : "cjs",
+    dest      : "./gen/c-hat.js",
+    sourceMap : true
 }))
