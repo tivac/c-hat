@@ -24,6 +24,9 @@ function createWindow() {
         autoHideMenuBar : true
     });
     
+    // Remove the default menu, it isn't very useful
+    window.setMenu(null);
+    
     window.loadURL(`file://${__dirname}/app/index.html`);
     
     window.on("resize", () => {
