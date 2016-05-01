@@ -1,36 +1,61 @@
-const electron = require('electron');
+const fs = require("fs");
+const path = require("path");
+const electron = require("electron");
 const app = electron.app;
+const file = path.join(app.getPath("userData"), "settings.json");
 
-let mainWindow;
+let window;
+let settings;
 
-function createWindow () {
-    mainWindow = new electron.BrowserWindow({ width : 800, height : 600 });
-    mainWindow.loadURL('file://' + __dirname + '/app/index.html');
+function createWindow() {
+    window = new electron.BrowserWindow(settings);
+    window.loadURL(`file://${__dirname}/app/index.html`);
+    
+    window.on("resize", () => {
+        settings = Object.assign(settings, window.getBounds());
+    });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    window.webContents.openDevTools();
 
-    mainWindow.on("closed", function () {
-        mainWindow = null
+    window.on("closed", () => {
+        window = null;
     });
 }
 
-app.on("ready", createWindow);
+app.on("ready", () => {
+    try {
+        let json = fs.readFileSync(file);
+        settings = JSON.parse(json);
+    } catch(e) {
+        settings = {
+            width  : 800,
+            height : 800
+        };
+    }
+    
+    createWindow();
+});
 
 // Quit when all windows are closed.
-app.on("window-all-closed", function () {
+app.on("window-all-closed", () => {
     // Except on OSX
-    if(process.platform === 'darwin') {
+    if(process.platform === "darwin") {
         return;
     }
     
     app.quit();
 });
 
-app.on("activate", function () {
+// Save out settings before quitting
+app.on("will-quit", () => {
+    fs.writeFileSync(file, JSON.stringify(settings, null, 4));
+});
+
+app.on("activate", () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if(mainWindow === null) {
+    if(window === null) {
         createWindow();
     }
 });

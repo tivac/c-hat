@@ -10,10 +10,19 @@
   "license": "MIT",
   "devDependencies": {
     "electron-prebuilt": "^0.37.8",
+    "eslint-config-arenanet": "^2.0.3",
     "modular-css": "^0.19.0",
     "rollup": "^0.26.1"
   },
   "dependencies": {
     "mithril": "^0.2.4"
+  },
+  "eslintConfig": {
+    "extends": "arenanet",
+    "env": {
+      "node": true,
+      "browser": true,
+      "es6": true
+    }
   }
 }
