@@ -1,39 +1,5 @@
-html,
-body,
 .bd {
-    width: 100%;
-    height: 100%;
-}
-
-html {
-    box-sizing: border-box;
-}
-
-*, *:before, *:after {
-    box-sizing: inherit;
-}
-
-
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    
-    margin: 0;
-}
-
-.icon {
-    width: 1em;
-    height: 1em;
-    
-    vertical-align: -0.15em;
-    
-    fill: currentColor;
-}
-
-.bd {
-    display: flex;
-    flex-direction: row;
+    composes: bd from "./shared.css";
 }
 
 .nav {
@@ -73,7 +39,7 @@ body {
 }
 
 .logo {
-    composes: icon;
+    composes: icon from "./shared.css";
     
     padding: 5px;
     

@@ -3,7 +3,7 @@
 var rollup = require("rollup").rollup;
 
 rollup({
-    entry   : "./app/app.js",
+    entry   : "./app/index.js",
     plugins : [
         require("modular-css/rollup")({
             css : "./gen/c-hat.css"
