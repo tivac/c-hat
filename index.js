@@ -7,6 +7,7 @@ const file = path.join(app.getPath("userData"), "settings.json");
 let argv = require("minimist")(process.argv.slice(2));
 
 let window;
+let tray;
 let settings;
 
 function createWindow() {
@@ -15,7 +16,11 @@ function createWindow() {
         height : settings.height,
         
         x : settings.x,
-        y : settings.y
+        y : settings.y,
+        
+        icon : "./icon.png",
+        
+        autoHideMenuBar : true
     });
     
     window.loadURL(`file://${__dirname}/app/index.html`);
@@ -44,6 +49,11 @@ app.on("ready", () => {
     global.settings = settings;
 
     createWindow();
+    
+    // Create Tray icon
+    tray = new electron.Tray("./icon.png");
+    
+    tray.on("double-click", () => window.show());
 });
 
 // Quit when all windows are closed.
