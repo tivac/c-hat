@@ -1,7 +1,9 @@
 const url = require("url");
 const path = require("path");
 
+const electron = require("electron");
 const remote = require("remote");
+
 const m = require("mithril");
 
 import css from "./app.css";
@@ -69,14 +71,13 @@ export default {
                         
                         // Listen for attempts to open a new window and open them
                         // in the system default browser
-                        el.addEventListener('new-window', function(e) {
-                            let protocol = url.parse(e.url).protocol;
-                            
-                            if(protocol.indexOf("http") !== 0) {
+                        el.addEventListener('new-window', (e) => {
+                            // Work around https://github.com/electron/electron/issues/5217
+                            if(e.disposition !== "foreground-tab") {
                                 return;
                             }
                             
-                            require('electron').shell.openExternal(e.url);
+                            electron.shell.openExternal(e.url);
                         });
                     }
                 }))
