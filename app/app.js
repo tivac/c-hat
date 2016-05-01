@@ -10,22 +10,27 @@ m.mount(document.body, {
     view : () => m("div", { class : css.bd },
         m("div", { class : css.nav },
             (settings.tabs || []).map((tab, idx) => m("a", {
-                    title   : tab,
-                    class   : css.link,
+                    title   : tab.title || tab.type || tab.url,
+                    class   : css[settings.active === idx ? "activelink" : "link"],
+                    
                     onclick : (e) => {
                         e.preventDefault();
                         settings.active = idx;
                     }
                 },
-                idx
+                m("svg", { class : css.logo },
+                    m("use", {
+                        href : `./symbols.svg#logo-${tab.type}`
+                    })
+                )
             ))
         ),
         m("div", { class : css.content },
             (settings.tabs || []).map((tab, idx) => m("webview", {
                 key   : idx,
                 
-                src   : tab,
-                class : css[settings.active === idx ? "active" : "tab"],
+                src   : tab.url,
+                class : css[settings.active === idx ? "activetab" : "tab"],
                 
                 config : function(el, initialized) {
                     if(initialized) {
