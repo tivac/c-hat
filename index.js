@@ -73,8 +73,8 @@ app.on("window-all-closed", () => {
     app.quit();
 });
 
-    // Save out settings before quitting
 app.on("will-quit", () => {
+    // Save out settings before quitting
     fs.writeFileSync(file, JSON.stringify(settings, null, 4));
 });
 
