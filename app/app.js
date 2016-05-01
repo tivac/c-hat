@@ -79,6 +79,12 @@ export default {
                             
                             electron.shell.openExternal(e.url);
                         });
+                        
+                        el.addEventListener("page-title-updated", (e) => {
+                            settings.tabs[idx].title = e.title;
+                            
+                            m.redraw();
+                        });
                     }
                 }))
             )
