@@ -4,20 +4,30 @@ const electron = require("electron");
 const app = electron.app;
 const file = path.join(app.getPath("userData"), "settings.json");
 
+let argv = require("minimist")(process.argv.slice(2));
+
 let window;
 let settings;
 
 function createWindow() {
-    window = new electron.BrowserWindow(settings);
+    window = new electron.BrowserWindow({
+        width  : settings.width,
+        height : settings.height,
+        
+        x : settings.x,
+        y : settings.y
+    });
+    
     window.loadURL(`file://${__dirname}/app/index.html`);
     
     window.on("resize", () => {
         settings = Object.assign(settings, window.getBounds());
     });
-
-    // Open the DevTools.
-    window.webContents.openDevTools();
-
+    
+    if(argv.devtools) {
+        window.webContents.openDevTools();
+    }
+    
     window.on("closed", () => {
         window = null;
     });
@@ -25,15 +35,14 @@ function createWindow() {
 
 app.on("ready", () => {
     try {
-        let json = fs.readFileSync(file);
-        settings = JSON.parse(json);
+        settings = JSON.parse(fs.readFileSync(file));
     } catch(e) {
-        settings = {
-            width  : 800,
-            height : 800
-        };
+        settings = JSON.parse(fs.readFileSync("./settings.json"));
     }
     
+    // So it's easily accessible anywhere
+    global.settings = settings;
+
     createWindow();
 });
 
