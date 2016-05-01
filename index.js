@@ -10,6 +10,10 @@ let window;
 let tray;
 let settings;
 
+function syncPosition() {
+    settings = Object.assign(settings, window.getBounds());
+}
+
 function createWindow() {
     window = new electron.BrowserWindow({
         width  : settings.width,
@@ -29,9 +33,8 @@ function createWindow() {
     
     window.loadURL(`file://${__dirname}/app/index.html`);
     
-    window.on("resize", () => {
-        settings = Object.assign(settings, window.getBounds());
-    });
+    window.on("resize", syncPosition);
+    window.on("move", syncPosition);
     
     if(argv.devtools) {
         window.webContents.openDevTools();
@@ -70,7 +73,7 @@ app.on("window-all-closed", () => {
     app.quit();
 });
 
-// Save out settings before quitting
+    // Save out settings before quitting
 app.on("will-quit", () => {
     fs.writeFileSync(file, JSON.stringify(settings, null, 4));
 });
