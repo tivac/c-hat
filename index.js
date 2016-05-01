@@ -18,7 +18,8 @@ function createWindow() {
         x : settings.x,
         y : settings.y,
         
-        icon : "./icon.png",
+        icon  : "./icon.png",
+        title : require("./package.json").title,
         
         autoHideMenuBar : true
     });
