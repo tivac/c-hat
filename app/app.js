@@ -52,7 +52,7 @@ export default {
                     },
                     m("svg", { class : css.logo },
                         m("use", {
-                            href : `./symbols.svg#logo-${tab.type}`
+                            href : `./logos.svg#${tab.type}`
                         })
                     )
                 ))
