@@ -1,21 +1,33 @@
+@value sharedcss: "./shared.css";
+
 .bd {
-    composes: bd from "./shared.css";
+    composes: bd from sharedcss;
 }
 
 .nav {
-    background: #010101;
+    composes: _flexv;
     
-    display: flex;
-    flex-direction: column;
+    background: #010101;
+}
+
+.tabs {
+    composes: _flexv;
+    
+    flex: 1;
 }
 
 .link,
 .link:active,
-.link:visited {
+.link:visited,
+.setup,
+.setup:active,
+.setup:visited {
     color: #AAA;
 }
 
 .link {
+    composes: _flexv;
+    
     width: 60px;
     height: 60px;
     
@@ -23,8 +35,6 @@
     
     background: #666;
     
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     
@@ -33,18 +43,38 @@
 
 .activelink {
     composes: link;
-    
-    color: #DFDFDF;
-    background: #333;
+    composes: _active;
 }
 
 .logo {
-    composes: icon from "./shared.css";
+    composes: icon from sharedcss;
     
     padding: 5px;
     
     width: 100%;
     height: 100%;
+}
+
+.config {
+    composes: _flexv;
+    
+    align-items: center;
+    
+    padding-bottom: 10px;
+}
+
+.setup {
+    width: 40px;
+    height: 40px;
+}
+
+.activeSetup {
+    composes: setup;
+    composes: _active;
+}
+
+.icon {
+    composes: icon from sharedcss;
 }
 
 .content {
@@ -69,5 +99,21 @@
     
     z-index: 1;
     
-    background: #242424;
+    background: #FFF;
 }
+
+._active {
+    color: #DFDFDF;
+    background: #333;
+}
+
+._flexh {
+    display: flex;
+    flex-direction: row;
+}
+
+._flexv {
+    display: flex;
+    flex-direction: column;
+}
+

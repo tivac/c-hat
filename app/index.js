@@ -1,7 +1,7 @@
 const remote = require("remote");
 const m = require("mithril");
 
-import app from "./app.js";
+import * as app from "./app.js";
 
 let settings = remote.getGlobal("settings");
 

@@ -6,41 +6,21 @@ const remote = require("remote");
 
 const m = require("mithril");
 
+import * as setup from "./setup.js";
+
 import css from "./app.css";
 
 const settings = remote.getGlobal("settings");
 
-export default {
-    view : () => {
-        if(!settings.tabs.length) {
-            return m("div", { class : css.bd },
-                m("p", `You'll need to add some tabs to ${path.join(remote.app.getPath("userData"), "settings.json")}`),
-                m("p", m("strong", "CLOSE C-HAT BEFORE EDITING THAT FILE")),
-                m("p", "The ", m("code", `"tabs"`), " key in your ", m("code", "settings.json"), " file should look like this:"),
-                m("pre", JSON.stringify([ {
-                            "type": "flowdock",
-                            "url": "https://flowdock.com"
-                        },
-                        {
-                            "type": "discord",
-                            "url": "https://discordapp.com/channels/@me"
-                        },
-                        {
-                            "type": "slack",
-                            "url": "https://hangzone.slack.com"
-                        },
-                        {
-                            "type": "gitter",
-                            "url": "https://gitter.im/arenanet/api-cdi"
-                        }
-                    ], null, 4)
-                ),
-                m("p", "Though obviously any other type won't have an icon yet.")
-            );
-        }
-        
-        return m("div", { class : css.bd },
-            m("div", { class : css.nav },
+export function view() {
+    // Default to settings if no tabs
+    if(!settings.tabs.length) {
+        settings.active = "setup";
+    }
+    
+    return m("div", { class : css.bd },
+        m("div", { class : css.nav },
+            m("div", { class : css.tabs },
                 settings.tabs.map((tab, idx) => m("a", {
                         title   : tab.title || tab.type || tab.url,
                         class   : css[settings.active === idx ? "activelink" : "link"],
@@ -57,37 +37,56 @@ export default {
                     )
                 ))
             ),
-            m("div", { class : css.content },
-                settings.tabs.map((tab, idx) => m("webview", {
-                    key   : idx,
+            m("div", { class : css.config },
+                m("a", {
+                        title : "Configure",
+                        class : css[settings.active === "setup" ? "activeSetup" : "setup"],
                     
-                    src   : tab.url,
-                    class : css[settings.active === idx ? "activetab" : "tab"],
+                        onclick : (e) => {
+                            e.preventDefault();
+                            
+                            settings.active = "setup";
+                        }
+                    },
+                    m("svg", { class : css.icon },
+                        m("use", {
+                            href : "./icons.svg#gear"
+                        })
+                    )
+                )
+            )
+        ),
+        m("div", { class : css.content },
+            settings.tabs.map((tab, idx) => m("webview", {
+                key   : idx,
+                
+                src   : tab.url,
+                class : css[settings.active === idx ? "activetab" : "tab"],
+                
+                config : function(el, initialized) {
+                    if(initialized) {
+                        return;
+                    }
                     
-                    config : function(el, initialized) {
-                        if(initialized) {
+                    // Listen for attempts to open a new window and open them
+                    // in the system default browser
+                    el.addEventListener('new-window', (e) => {
+                        // Work around https://github.com/electron/electron/issues/5217
+                        if(e.disposition !== "foreground-tab") {
                             return;
                         }
                         
-                        // Listen for attempts to open a new window and open them
-                        // in the system default browser
-                        el.addEventListener('new-window', (e) => {
-                            // Work around https://github.com/electron/electron/issues/5217
-                            if(e.disposition !== "foreground-tab") {
-                                return;
-                            }
-                            
-                            electron.shell.openExternal(e.url);
-                        });
+                        electron.shell.openExternal(e.url);
+                    });
+                    
+                    el.addEventListener("page-title-updated", (e) => {
+                        settings.tabs[idx].title = e.title;
                         
-                        el.addEventListener("page-title-updated", (e) => {
-                            settings.tabs[idx].title = e.title;
-                            
-                            m.redraw();
-                        });
-                    }
-                }))
-            )
-        );
-    }
+                        m.redraw();
+                    });
+                }
+            })),
+            settings.active === "setup" ? m(setup) : null
+        )
+    );
 }
