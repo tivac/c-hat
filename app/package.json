@@ -1,0 +1,13 @@
+{
+  "name": "c-hat",
+  "productName": "C-hat",
+  "main": "./main.js",
+  "version": "1.0.0",
+  "description": "Embedding chat apps since 2016",
+  "author": "Pat Cavit <npm@patcavit.com>",
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "mithril": "^0.2.4"
+  }
+}

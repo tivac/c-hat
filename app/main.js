@@ -1,10 +1,19 @@
 const fs = require("fs");
 const path = require("path");
+
 const electron = require("electron");
 const app = electron.app;
-const file = path.join(app.getPath("userData"), "settings.json");
 
-let argv = require("minimist")(process.argv.slice(2));
+// Default to local appdata only, because it's more correct
+// Has to be done asap or it won't take
+// https://github.com/electron/electron/issues/1404
+if(process.platform === "win32") {
+    app.setPath("appData", process.env.LOCALAPPDATA);
+    app.setPath("userData", path.join(process.env.LOCALAPPDATA, app.getName()));
+}
+
+const argv = require("minimist")(process.argv.slice(2));
+const json = path.join(app.getPath("userData"), "settings.json");
 
 let window;
 let tray;
@@ -22,8 +31,8 @@ function createWindow() {
         x : settings.x,
         y : settings.y,
         
-        icon  : "./icon.png",
-        title : require("./package.json").title,
+        icon  : "./app/icon.png",
+        title : require("./package.json").productName,
         
         autoHideMenuBar : true
     });
@@ -31,7 +40,7 @@ function createWindow() {
     // Remove the default menu, it isn't very useful
     window.setMenu(null);
     
-    window.loadURL(`file://${__dirname}/app/index.html`);
+    window.loadURL(`file://${__dirname}/index.html`);
     
     window.on("resize", syncPosition);
     window.on("move", syncPosition);
@@ -46,10 +55,11 @@ function createWindow() {
 }
 
 app.on("ready", () => {
+    
     try {
-        settings = JSON.parse(fs.readFileSync(file));
+        settings = JSON.parse(fs.readFileSync(json));
     } catch(e) {
-        settings = JSON.parse(fs.readFileSync("./settings.json"));
+        settings = JSON.parse(fs.readFileSync("./app/settings.json"));
     }
     
     // So it's easily accessible anywhere
@@ -58,7 +68,7 @@ app.on("ready", () => {
     createWindow();
     
     // Create Tray icon
-    tray = new electron.Tray("./icon.png");
+    tray = new electron.Tray("./app/icon.png");
     
     tray.on("double-click", () => window.show());
 });
@@ -75,7 +85,7 @@ app.on("window-all-closed", () => {
 
 app.on("will-quit", () => {
     // Save out settings before quitting
-    fs.writeFileSync(file, JSON.stringify(settings, null, 4));
+    fs.writeFileSync(json, JSON.stringify(settings, null, 4));
 });
 
 app.on("activate", () => {
