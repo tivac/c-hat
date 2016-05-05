@@ -3,15 +3,15 @@
 var rollup = require("rollup").rollup;
 
 rollup({
-    entry   : "./app/index.js",
+    entry   : "./app/renderer.js",
     plugins : [
         require("modular-css/rollup")({
-            css : "./gen/c-hat.css"
+            css : "./app/gen/c-hat.css"
         })
     ]
 })
 .then((bundle) => bundle.write({
     format : "iife",
-    dest   : "./gen/c-hat.js"
+    dest   : "./app/gen/c-hat.js"
 }))
 .catch(console.error.bind(console));
