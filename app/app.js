@@ -68,6 +68,12 @@ export function view() {
                         return;
                     }
                     
+                    var session = remote.session.fromPartition(el.partition);
+                    
+                    session.setPermissionRequestHandler((contents, permission, cb) => {
+                        cb((tab.permissions && tab.permissions.includes(permission)) === true);
+                    });
+                    
                     // Listen for attempts to open a new window and open them
                     // in the system default browser
                     el.addEventListener('new-window', (e) => {
