@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "description": "Embedding chat apps since 2016",
   "scripts": {
+    "build": "npm run bundle && npm run pack",
     "bundle": "node build/bundle.js",
+    "package": "node build/package.js",
     "start": "npm run bundle && electron ./app --devtools",
     "watch": "nodemon -e js,css,html,json --watch app build/bundle.js"
   },

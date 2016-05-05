@@ -31,7 +31,7 @@ function createWindow() {
         x : settings.x,
         y : settings.y,
         
-        icon  : "./app/icon.png",
+        icon  : path.join(__dirname, "./icon.png"),
         title : require("./package.json").productName,
         
         autoHideMenuBar : true
@@ -59,7 +59,7 @@ app.on("ready", () => {
     try {
         settings = JSON.parse(fs.readFileSync(json));
     } catch(e) {
-        settings = JSON.parse(fs.readFileSync("./app/settings.json"));
+        settings = JSON.parse(fs.readFileSync(path.join(__dirname, "./settings.json")));
     }
     
     // So it's easily accessible anywhere
@@ -68,7 +68,7 @@ app.on("ready", () => {
     createWindow();
     
     // Create Tray icon
-    tray = new electron.Tray("./app/icon.png");
+    tray = new electron.Tray(path.join(__dirname, "./icon.png"));
     
     tray.on("double-click", () => window.show());
 });
