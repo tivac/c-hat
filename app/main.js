@@ -3,6 +3,7 @@ const path = require("path");
 
 const electron = require("electron");
 const app = electron.app;
+const ipc = electron.ipcMain;
 
 // Default to local appdata only, because it's more correct
 // Has to be done asap or it won't take
@@ -55,7 +56,6 @@ function createWindow() {
 }
 
 app.on("ready", () => {
-    
     try {
         settings = JSON.parse(fs.readFileSync(json));
     } catch(e) {
@@ -94,4 +94,17 @@ app.on("activate", () => {
     if(window === null) {
         createWindow();
     }
+});
+
+// Settings hooks
+ipc.on("tab-add", (e, tab) => {
+    settings.tabs.push(tab);
+    
+    e.sender.send("tab-updated");
+});
+
+ipc.on("tab-del", (e, pos) => {
+    settings.tabs.splice(pos, 1);
+    
+    e.sender.send("tab-updated");
 });

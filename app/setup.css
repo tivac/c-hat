@@ -1,3 +1,23 @@
 .content {
     composes: activetab from "./app.css";
 }
+
+.tab {
+    padding: 10px;
+}
+
+.tab + .tab {
+    margin-top: 10px;
+}
+
+.tab:nth-child(2n) {
+    background: #CCC;
+}
+
+.urlinput {
+    width: 80%;
+}
+
+.actions {
+    margin-top: 10px;
+}
