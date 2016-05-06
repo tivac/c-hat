@@ -8,7 +8,7 @@
     "bundle": "node build/bundle.js",
     "package": "node build/package.js",
     "start": "npm run bundle && electron ./app --devtools",
-    "watch": "nodemon -e js,css,html,json --watch app build/bundle.js"
+    "watch": "nodemon -e js,css,html,json --watch app --ignore app/gen build/bundle.js"
   },
   "author": "Pat Cavit <npm@patcavit.com>",
   "license": "MIT",
