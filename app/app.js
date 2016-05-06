@@ -4,8 +4,6 @@ const path = require("path");
 const electron = require("electron");
 const remote = require("remote");
 
-const m = require("mithril");
-
 import * as setup from "./setup.js";
 
 import css from "./app.css";

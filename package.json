@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Embedding chat apps since 2016",
   "scripts": {
-    "build": "npm run bundle && npm run pack",
+    "build": "npm run bundle -- --compress && npm run pack",
     "bundle": "node build/bundle.js",
     "package": "node build/package.js",
     "start": "npm run bundle && electron ./app --devtools",
@@ -13,14 +13,19 @@
   "author": "Pat Cavit <npm@patcavit.com>",
   "license": "MIT",
   "devDependencies": {
+    "cssnano": "^3.5.2",
     "electron-packager": "^7.0.1",
     "electron-prebuilt": "^0.37.8",
     "eslint-config-arenanet": "^2.0.3",
     "filesize": "^3.3.0",
     "humanize-duration": "^3.7.1",
+    "mithril-objectify": "^2.2.5",
     "modular-css": "^0.19.0",
+    "modular-css-namer": "^1.0.1",
     "nodemon": "^1.9.2",
     "rollup": "^0.26.1",
+    "rollup-plugin-buble": "^0.7.0",
+    "rollup-plugin-uglify": "^0.3.1",
     "zip-dir": "^1.0.2"
   },
   "eslintConfig": {
@@ -29,6 +34,9 @@
       "node": true,
       "browser": true,
       "es6": true
+    },
+    "globals": {
+      "m": true
     }
   }
 }

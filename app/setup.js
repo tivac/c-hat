@@ -1,5 +1,3 @@
-const m = require("mithril");
-
 import css from "./setup.css";
 
 export function view() {

@@ -1,5 +1,4 @@
 const remote = require("remote");
-const m = require("mithril");
 
 import * as app from "./app.js";
 
